@@ -1,0 +1,5 @@
+ansible-core==2.14.2
+ansible-lint==6.13.1
+jsondiff==2.0.0
+passlib==1.7.4
+PyYAML==6.0
