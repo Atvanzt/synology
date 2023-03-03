@@ -1,9 +1,20 @@
 ---
 - hosts: all
+  vars:
+    NOMAD_VERSION: 1.4.4
+    PACKAGE_VERSION: "{{NOMAD_VERSION}}-1000"
+    OS: linux
+    ARCH: amd64
+    NOMAD_ZIP_FILE: nomad_{{NOMAD_VERSION}}_{{OS}}_{{ARCH}}.zip	
+    NOMAD_URL: "https://releases.hashicorp.com/nomad/{{NOMAD_VERSION}}/{{NOMAD_ZIP_FILE}}"
   become: yes
   gather_facts: yes
 
   pre_tasks:
+
+  - name: Debug
+    debug:
+      msg: First start {{NOMAD_URL}}
 
   - name: Update apt cache if needed.
     apt: update_cache=yes cache_valid_time=3600
@@ -15,21 +26,8 @@
         - python3-pip
         - cifs-utils
         - git
-        - build-essential
       state: present
 
-  - name: "Create a multi gcc environment including 32 and 64 bits ARM"
-    shell: "{{ item }}" 
-    with_items: [
-              'update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9' ,
-              'apt-get install -y gcc-9-multilib gcc-9-aarch64-linux-gnu gcc-9-arm-linux-gnueabi' ,
-              'ln -sf /usr/include/x86_64-linux-gnu/asm/ /usr/local/include/asm' ,
-              'ln -sf /usr/bin/aarch64-linux-gnu-gcc-9 /usr/bin/aarch64-linux-gnu-gcc' ,
-              'ln -sf /usr/bin/aarch64-linux-gnu-gcc-ar-9 /usr/bin/aarch64-linux-gnu-gcc-ar' ,
-              'ln -sf /usr/bin/arm-linux-gnueabi-gcc-9 /usr/bin/arm-linux-gnueabi-gcc' ,
-              'ln -sf /usr/bin/arm-linux-gnueabi-gcc-ar-9 /usr/bin/arm-linux-gnueabi-gcc-ar' 
-   ]
-      
   - name: "Check existence Synology Packaging build scripts"
     stat:
       path: /toolkit/pkgscripts-ng
@@ -58,98 +56,13 @@
       cmd: ./EnvDeploy -v 7.0 -p avoton
     when: not stat_reg_ds_build_target_architecture_name.stat.exists
 
-  - name: "Remove GO dependency binairies if present"
-    ansible.builtin.file:
-      path: ~/go
-      state: absent
-
-  - name: "Remove GO toolkit installed version"
-    ansible.builtin.file:
-      path: /usr/local/go
-      state: absent
-
-  - name: "Remove Nomad sources en generated files if present"
+  - name: "Make sure the nomad prebuilt exists."
     ansible.builtin.file:
       path: /toolkit/prebuilt/nomad
-      state: absent
+      state: directory
 
-  - name: "Change directory for installing GO from pre-packaged asset"
+  - name: "Download and unarchive nomad released archive"
     ansible.builtin.unarchive:
-      src: https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
-      dest: /usr/local
-      remote_src: yes
- 
-  - name: "Create symbolic link to GO"
-    ansible.builtin.file:
-      src: /usr/local/go/bin/go
-      dest: /usr/bin/go 
-      owner: root
-      group: root
-      state: link
-      force: yes
-
-  - name: "Create symbolic link to GO format"
-    ansible.builtin.file:
-      src: /usr/local/go/bin/gofmt
-      dest: /usr/bin/gofmt
-      owner: root
-      group: root
-      state: link
-      force: yes
-
-  - name: "Pull the Nomad Git repository"
-    git:
-      repo: https://github.com/hashicorp/nomad.git
+      src: "{{NOMAD_URL}}" 
       dest: /toolkit/prebuilt/nomad
-      version: v1.5.0-beta.1
-
-  - name: "Prepare PATH in shell for GO binaries, to be able to build GP based sources."
-    ansible.builtin.lineinfile:
-      path: ~/.bashrc
-      state: present
-      line: export PATH=$PATH:~/go/bin 
-
-  - name: "Make sure Node JS has enough heap to build Nomad Ember based UI"
-    ansible.builtin.lineinfile:
-      path: ~/.bashrc
-      state: present
-      line: export NODE_OPTIONS="--max-old-space-size=2048"
-
-  - name: "Prepare nomad build, add yarn nad correct NodeJS version"
-    shell: "{{ item }}"
-    with_items: [
-                  'apt remove -y cmdtest' ,
-                  'apt remove -y yarn' ,
-                  'curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -' ,
-                  'echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list' ,
-                  'apt-get update' ,
-                  'apt-get install -y yarn' ,
-                  'apt update',
-                  'curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -' ,
-                  'apt install -y nodejs'
-                ]
-
-  - name: "Prepare nomad build"
-    shell:
-      chdir: /toolkit/prebuilt/nomad
-      cmd: make bootstrap
-
-  - name: "Execute nomad ui build steps"
-    shell:
-      chdir: /toolkit/prebuilt/nomad/ui
-      cmd: yarn
-
-  - name: "Execute nomad prerelease step"
-    shell: 
-      chdir: /toolkit/prebuilt/nomad
-      cmd: bash -ilc 'make prerelease'
-
-  - name: "Make sure the gnu arm compiler is available"
-    shell:
-      cmd: sudo apt-get -y install gcc-arm-linux-gnueabihf
-
-  - name: "Execute nomad release step"
-    shell: 
-      chdir: /toolkit/prebuilt/nomad
-      cmd: bash -ilc 'make release'
-
+      remote_src: yes
