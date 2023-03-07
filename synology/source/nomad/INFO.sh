@@ -11,7 +11,7 @@ source /pkgscripts/include/pkg_util.sh
 package="nomad"
 version="{put_synology_package_version_here}"
 displayname="HashiCorp Nomad"
-maintainer=ATVANZT"
+maintainer="ATVANZT"
 maintainer_url="https://www.atvanzt.nl"
 arch="noarch"
 description="Orchestration Made Easy by HashiCorp Nomad."
