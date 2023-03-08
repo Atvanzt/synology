@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-    NOMAD_VERSION: 1.4.4
+    NOMAD_VERSION: 1.5.0
     PACKAGE_VERSION: "{{NOMAD_VERSION}}-1000"
     OS: linux
     ARCH: amd64
@@ -61,8 +61,37 @@
       path: /toolkit/prebuilt/nomad
       state: directory
 
-  - name: "Download and unarchive nomad released archive"
+  - name: "Pull the Synology Nomad ATVANZT Build Git repository"
+    git:
+      repo: 'https://github.com/gokkep/test_synology_builder.git'
+      dest: /toolkit/synology_nomad_package_sources
+      version: develop 
+
+  - name: "Copy Synology Nomad package environment into Synology build toolkit for DSM 7.0"
+    ansible.builtin.copy:
+      src: /toolkit/synology_nomad_package_sources/synology/source
+      dest: /toolkit
+      directory_mode:
+      remote_src: yes
+
+  - name: "Create the bin directory for the nomad binairy" 
+    ansible.builtin.file:
+      path: /toolkit/source/nomad/package/bin
+      state: directory
+ 
+  - name: "Download and unarchive nomad released archive directly into the Synology packaging environment setup for nomad."
     ansible.builtin.unarchive:
       src: "{{NOMAD_URL}}" 
-      dest: /toolkit/prebuilt/nomad
+      dest: /toolkit/source/nomad/package/bin
       remote_src: yes
+
+  - name: "Inject correct nomad version number for name nomad synology package INFO"
+    ansible.builtin.lineinfile:
+      path: /toolkit/source/nomad
+      search_string: '{put_synology_package_version_here}'
+      line: {{PACKAGE_VERSION}}
+
+  - name: "Execute the Synology build command to create the synology nomad package."
+    shell:
+      chdir: /toolkit/pkgscripts-ng
+      cmd: ./PkgCreate.py --v 7.0 -p avoton nomad
