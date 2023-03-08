@@ -86,12 +86,12 @@
       remote_src: yes
 
   - name: "Inject correct nomad version number for name nomad synology package INFO"
-    ansible.builtin.lineinfile:
-      path: /toolkit/source/nomad
-      search_string: '{put_synology_package_version_here}'
-      line: {{PACKAGE_VERSION}}
+    ansible.builtin.replace:
+      path: /toolkit/source/nomad/INFO.sh
+      regexp: '{put_synology_package_version_here}'
+      replace: "{{PACKAGE_VERSION}}"
 
   - name: "Execute the Synology build command to create the synology nomad package."
     shell:
       chdir: /toolkit/pkgscripts-ng
-      cmd: ./PkgCreate.py --v 7.0 -p avoton nomad
+      cmd: ./PkgCreate.py -v 7.0 -p avoton nomad
