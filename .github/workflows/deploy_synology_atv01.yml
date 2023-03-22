@@ -50,8 +50,8 @@ jobs:
     # Create Ansible inventory file with secrets using heredoc
       - name: Create Ansible inventory file
         run: |
-          cat > inventory_atv01 <<DELIMITER 
-            ansible_port=5000 ansible_ssh_private_key=id_rsa_ansible_atv01
+          cat << DELIMITER > inventory_atv01
+            $ATV01_HOST_IP4_ADDRESS ansible_port=$SSH_PORT_ATV01 ansible_user=$SSH_ANSIBLE_USER_ATV01 ansible_ssh_private_key=id_rsa_ansible_atv01
           DELIMITER
         env:
           ATV01_HOST_IP4_ADDRESS: ${{ secrets.ATV01_HOST_IP4_ADDRESS }}
