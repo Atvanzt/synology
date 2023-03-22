@@ -72,4 +72,4 @@ jobs:
 
       - name: run playbook
         run: |
-          ansible-playbook -i inventory_atv01 ansible/ping_test.yml
+          ansible 86.82.73.232 -m ping -i inventory_atv01
