@@ -53,8 +53,4 @@ jobs:
     # Test ssh
       - name: Test ssh
         run:
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ansible@86.82.73.232 -p 6788
-          
-      - name: Print ssh-add identities
-        run: 
-          ssh-add -l
+          ssh -o StrictHostKeyChecking=no ansible@86.82.73.232 -p 6788
