@@ -50,26 +50,11 @@ jobs:
         run: 
           ssh-add -l
           
-    # Create the private key file
-      - name: Create private key file
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY_ATV01}}
-        run: |
-          cat << DELIMITER > id_rsa_ansible_atv01
-            $SSH_PRIVATE_KEY_ATV01
-          DELIMITER
+    # Test ssh
+      - name: Test ssh
+        run:
+          ssh ansible@86.82.73.232 -p 6788
           
-    # Create Ansible inventory file with secrets using heredoc
-      - name: Create Ansible inventory file
-        env:
-          ATV01_HOST_IP4_ADDRESS: ${{ secrets.ATV01_HOST_IP4_ADDRESS }}
-          SSH_PORT_ATV01: ${{ secrets.SSH_PORT_ATV01 }}
-          SSH_ANSIBLE_USER_ATV01: ${{ secrets.SSH_ANSIBLE_USER_ATV01 }}
-        run: |
-          cat << DELIMITER > inventory_atv01
-            $ATV01_HOST_IP4_ADDRESS ansible_port=$SSH_PORT_ATV01 ansible_user=$SSH_ANSIBLE_USER_ATV01 ansible_ssh_private_key=id_rsa_ansible_atv01
-          DELIMITER
-
-      - name: run playbook
-        run: |
-          ansible 86.82.73.232 -m ping -i inventory_atv01
+      - name: Print ssh-add identities
+        run: 
+          ssh-add -l
