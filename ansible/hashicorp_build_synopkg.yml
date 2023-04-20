@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-    HASHICORP_ZIP_FILE: {{syno_package_name}}_{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}.zip	
+    HASHICORP_ZIP_FILE: "{{syno_package_name}}_{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}.zip"
     HASHICORP_APP_URL: "https://releases.hashicorp.com/{{syno_package_name}}/{{hashicorp_app_version}}/{{HASHICORP_ZIP_FILE}}"
   become: yes
   gather_facts: yes
@@ -10,7 +10,7 @@
 
   - name: Debug
     debug:
-      msg: Going to download: {{HASHICORP_APP_URL}}
+      msg: "Going to download: {{HASHICORP_APP_URL}}"
 
   - name: Update apt cache if needed.
     apt: update_cache=yes cache_valid_time=3600
