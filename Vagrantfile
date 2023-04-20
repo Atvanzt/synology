@@ -67,7 +67,8 @@ Vagrant.configure("2") do |config|
         hashicorp_app_arch: ENV['HASHICORP_APP_ARCH'],
         syno_package_name: ENV['SYNO_PACKAGE_NAME'],
         syno_package_display_name: ENV['SYNO_PACKAGE_DISPLAY_NAME'],
-        syno_package_description: ENV['SYNO_PACKAGE_DESCRIPTION']
+        syno_package_description: ENV['SYNO_PACKAGE_DESCRIPTION'],
+        gh_access_token: ENV['GH_ACCESS_TOKEN']
       }
       #ansible.verbose = "vvv"
     end
