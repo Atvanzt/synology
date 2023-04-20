@@ -1,5 +1,5 @@
 
-name: Build Synology Package for Hashicorp Nomad
+name: Build Synology Package for a Hashicorp nomad
 
 # Controls when the workflow will run
 on:
@@ -29,4 +29,4 @@ jobs:
           
       - name: run playbook
         run: |
-          ansible-playbook --connection=local --inventory 127.0.0.1, ansible/nomad_build_synopkg.yml
+          ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars 'hashicorp_app_version=1.5.0 hashicorp_app_os=linux hashicorp_app_arch=amd64 syno_package_name=nomad' ansible/hashicorp_build_synopkg.yml
