@@ -63,7 +63,7 @@
 
   - name: "Pull the Synology Nomad ATVANZT Build Git repository"
     git:
-      repo: 'https://github.com/gokkep/test_synology_builder.git'
+      repo: 'https://github.com/atvanzt/synology.git'
       dest: /toolkit/synology_nomad_package_sources
       version: develop 
 
