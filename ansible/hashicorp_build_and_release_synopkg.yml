@@ -116,13 +116,12 @@
 
   - name: Get the latest release when available 
     ansible.builtin.uri:
-      url: "https://api.github.com/repos/atvanzt/atvanzt.nl/releases/tags/{{ release_version_tag }}"
+      url: "https://api.github.com/repos/atvanzt/synology/releases/tags/{{ release_version_tag }}"
       method: GET
       headers:
         Accept: "application/vnd.github+json"
         Authorization: "Bearer {{gh_access_token}}"
         X-GitHub-Api-Version: "2022-11-28" 
-      status_code: 200
     register: tagged_version
      
   - name: Create release
