@@ -137,4 +137,4 @@
       body_format: json
       status_code: 201
     register: release_info
-    when: not release_tag_response == 200
+    when: not release_tag_response.status == 200
