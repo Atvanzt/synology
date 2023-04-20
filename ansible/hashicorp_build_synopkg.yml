@@ -81,12 +81,30 @@
       dest: "/toolkit/source/{{syno_package_name}}/package/bin"
       remote_src: yes
 
-  - name: "Inject correct Hashicorp app version number for app name synology package INFO"
+  - name: "Inject correct Hashicorp app name into synology package INFO"
+    ansible.builtin.replace:
+      path: "/toolkit/source/{{syno_package_name}}/INFO.sh"
+      regexp: '{put_synology_package_name_here}'
+      replace: "{{syno_package_name}}"
+
+  - name: "Inject correct Hashicorp app version number into synology package INFO"
     ansible.builtin.replace:
       path: "/toolkit/source/{{syno_package_name}}/INFO.sh"
       regexp: '{put_synology_package_version_here}'
-      replace: "{{hashicorp_app_version}}"
+      replace: "{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}"
 
+  - name: "Inject correct Hashicorp app display name into synology package INFO"
+    ansible.builtin.replace:
+      path: "/toolkit/source/{{syno_package_name}}/INFO.sh"
+      regexp: '{put_synology_package_displayname_here}'
+      replace: "{{syno_package_display_name}}"
+
+  - name: "Inject correct Hashicorp app description into synology package INFO"
+    ansible.builtin.replace:
+      path: "/toolkit/source/{{syno_package_name}}/INFO.sh"
+      regexp: '{put_synology_package_description_here}'
+      replace: "{{syno_package_description}}"
+      
   - name: "Execute the Synology build command to create the synology Hashicorp package."
     shell:
       chdir: /toolkit/pkgscripts-ng

@@ -65,7 +65,9 @@ Vagrant.configure("2") do |config|
         hashicorp_app_version: ENV['HASHICORP_APP_VERSION'],
         hashicorp_app_os: ENV['HASHICORP_APP_OS'],
         hashicorp_app_arch: ENV['HASHICORP_APP_ARCH'],
-        syno_package_name: ENV['SYNO_PACKAGE_NAME']
+        syno_package_name: ENV['SYNO_PACKAGE_NAME'],
+        syno_package_display_name: ENV['SYNO_PACKAGE_DISPLAY_NAME'],
+        syno_package_description: ENV['SYNO_PACKAGE_DESCRIPTION']
       }
       #ansible.verbose = "vvv"
     end

@@ -8,13 +8,13 @@ os_max_ver=""
 
 source /pkgscripts/include/pkg_util.sh
 
-package="nomad"
+package="{put_synology_package_name_here}"
 version="{put_synology_package_version_here}"
-displayname="HashiCorp Nomad"
+displayname="{put_synology_package_displayname_here}"
 maintainer="ATVANZT"
 maintainer_url="https://www.atvanzt.nl"
 arch="noarch"
-description="Orchestration Made Easy by HashiCorp Nomad."
+description="{put_synology_package_description_here}"
 create_time="${TIMESTAMP}"
 support_conf_folder="yes"
 os_min_ver="${os_min_ver}"
