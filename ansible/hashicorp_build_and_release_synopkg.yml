@@ -142,10 +142,16 @@
   - name: Retrieve the release identification
     set_fact:
       release_id: "{{ release_info.json.id }}"
+    when: release_info.status == 201
+    
+  - name: Retrieve the release identification
+    set_fact:
+      release_id: "{{ release_info.json.id }}"
+    when: release_tag_response.status == 200   
 
   - name: Update the release with the created asset/artifact
     ansible.builtin.uri:
-      url: "https://uploads.github.com/repos/atvanzt/atvanzt.nl/releases/{{ release_id }}/assets?name={{syno_package_name}}-{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}.spk"
+      url: "https://uploads.github.com/repos/atvanzt/synology/releases/{{ release_id }}/assets?name={{syno_package_name}}-{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}.spk"
       method: POST
       headers:
         Accept: "application/vnd.github+json"
@@ -154,4 +160,5 @@
         Content-Type: "application/octet-stream" 
       remote_src: true
       src: /toolkit/build_env/ds.avoton-7.0/image/packages/{{syno_package_name}}-{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}.spk
-      status_code: 201        
+      status_code: 201       
+    when: release_info.status == 201
