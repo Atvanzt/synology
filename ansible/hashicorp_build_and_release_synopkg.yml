@@ -114,7 +114,7 @@
     set_fact:
       release_version_tag: "{{syno_package_name}}_{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}"
 
-  - name: Get the latest release when available 
+  - name: Try to get a release with the given tag conditions
     ansible.builtin.uri:
       url: "https://api.github.com/repos/atvanzt/synology/releases/tags/{{ release_version_tag }}"
       method: GET
@@ -136,18 +136,22 @@
       body: {"tag_name":"{{ release_version_tag }}","target_commitish":"master","name":"{{ release_version_tag }}","body":"Hashicorp release notes: https://github.com/hashicorp/{{ syno_package_name }}/releases/tag/v{{ hashicorp_app_version }}","draft":false,"prerelease":false,"generate_release_notes":false}
       body_format: json
       status_code: 201
-    register: release_info
     when: not release_tag_response.status == 200
-    
+
+  - name: Get the latest release
+    ansible.builtin.uri:
+      url: "https://api.github.com/repos/atvanzt/synology/releases/tags/{{ release_version_tag }}"
+      method: GET
+      headers:
+        Accept: "application/vnd.github+json"
+        Authorization: "Bearer {{gh_access_token}}"
+        X-GitHub-Api-Version: "2022-11-28" 
+      status_code: [200]
+    register: release_info
+   
   - name: Retrieve the release identification
     set_fact:
       release_id: "{{ release_info.json.id }}"
-    when: release_info.status == 201
-    
-  - name: Retrieve the release identification
-    set_fact:
-      release_id: "{{ release_info.json.id }}"
-    when: release_tag_response.status == 200   
 
   - name: Update the release with the created asset/artifact
     ansible.builtin.uri:
@@ -161,4 +165,4 @@
       remote_src: true
       src: /toolkit/build_env/ds.avoton-7.0/image/packages/{{syno_package_name}}-{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}.spk
       status_code: 201       
-    when: release_info.status == 201
+    when: release_tag_response.status == 200   
