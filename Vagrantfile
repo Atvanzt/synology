@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "ansible/nomad_build_synopkg.yml"
+      ansible.playbook = "ansible/hashicorp_build_synopkg.yml"
 	  ansible.extra_vars = {
         hashicorp_app_version: ENV['HASHICORP_APP_VERSION'],
         hashicorp_app_os: ENV['HASHICORP_APP_OS'],
