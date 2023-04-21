@@ -124,7 +124,20 @@
         X-GitHub-Api-Version: "2022-11-28" 
       status_code: [200, 404]
     register: release_tag_response
-     
+
+  - name: Create the release notes as a markdown file
+    shell: > 
+      cat << DELIMITER > release_notes.md
+        This release contains a Synology package for {{ syno_package_name }} created with Synology build tools.
+        The Hashicorp binary has been packaged into a Synology spk ready to install.
+        
+        Hashicorp release notes: https://github.com/hashicorp/{{ syno_package_name }}/releases/tag/v{{ hashicorp_app_version }}
+      DELIMITER
+
+  - name: Read in the file contents of the release notes
+    shell: "cat release_notes.md"
+    register: release_notes
+    
   - name: Create release
     ansible.builtin.uri:
       url: "https://api.github.com/repos/atvanzt/synology/releases"
@@ -133,7 +146,7 @@
         Accept: "application/vnd.github+json"
         Authorization: "Bearer {{gh_access_token}}"
         X-GitHub-Api-Version: "2022-11-28" 
-      body: {"tag_name":"{{ release_version_tag }}","target_commitish":"master","name":"{{ release_version_tag }}","body":"Hashicorp release notes: https://github.com/hashicorp/{{ syno_package_name }}/releases/tag/v{{ hashicorp_app_version }}","draft":false,"prerelease":false,"generate_release_notes":false}
+      body: {"tag_name":"{{ release_version_tag }}","target_commitish":"master","name":"{{ release_version_tag }}","body":"{{ release_notes.stdout }}","draft":false,"prerelease":false,"generate_release_notes":false}
       body_format: json
       status_code: 201
     when: not release_tag_response.status == 200
