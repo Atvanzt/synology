@@ -29,4 +29,4 @@ jobs:
           
       - name: run playbook
         run: |
-          ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars 'hashicorp_app_version=1.5.0 hashicorp_app_os=linux hashicorp_app_arch=amd64 syno_package_name=nomad syno_package_display_name="HashiCorp Nomad" syno_package_description="Orchestration Made Easy by HashiCorp Nomad." gh_access_token=${{secrets.GITHUB_TOKEN}}' ansible/hashicorp_build_synopkg.yml
+          ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars 'hashicorp_app_version=1.5.0 hashicorp_app_os=linux hashicorp_app_arch=amd64 syno_package_name=nomad syno_package_display_name="HashiCorp Nomad" syno_package_description="Orchestration Made Easy by HashiCorp Nomad." gh_access_token=${{secrets.GITHUB_TOKEN}}' ansible/hashicorp_build_and_release_synopkg.yml
