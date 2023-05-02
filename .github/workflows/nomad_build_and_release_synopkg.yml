@@ -1,5 +1,5 @@
 
-name: Build and Release Synology Package for a Hashicorp nomad
+name: Build and Release a Synology Package for Hashicorp nomad
 
 # Controls when the workflow will run
 on:
