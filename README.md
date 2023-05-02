@@ -10,4 +10,8 @@ Currently only Avoton based packages are created and released. See list of [CPUâ
 
 If there are people interested in other architectures, please contact us.
 
-Many thank to [Prabir Shrestha his investigations](https://github.com/prabirshrestha/synology-nomad).
+
+
+
+
+Many thanks to [Prabir Shrestha his investigations](https://github.com/prabirshrestha/synology-nomad).
