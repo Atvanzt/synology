@@ -9,3 +9,5 @@ The packages are created using the [official Synology build environment](https:/
 Currently only Avoton based packages are created and released. See list of [CPU’s and architectures](https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have) to understand which Synology devices support Avoton.
 
 If there are people interested in other architectures, please contact us.
+
+Many thank to [Prabir Shrestha his investigations](https://github.com/prabirshrestha/synology-nomad).
