@@ -1,8 +1,8 @@
 {
     "systemd-user-unit":{},
-	"usr-local-linker": {
-		"bin": ["package/bin/nomad"]
-	},
+    "usr-local-linker": {
+        "bin": ["package/bin/nomad"]
+    },
     "data-share": {
         "shares": [{
             "name": "nomad",
