@@ -91,7 +91,7 @@
     ansible.builtin.replace:
       path: "/toolkit/source/{{syno_package_name}}/INFO.sh"
       regexp: '{put_synology_package_version_here}'
-      replace: "{{hashicorp_app_version}}_{{hashicorp_app_os}}_{{hashicorp_app_arch}}"
+      replace: "{{hashicorp_app_version}}"
 
   - name: "Inject correct Hashicorp app display name into synology package INFO"
     ansible.builtin.replace:
