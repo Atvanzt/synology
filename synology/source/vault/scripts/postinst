@@ -1,0 +1,31 @@
+#!/bin/sh
+set -e
+
+export VAULT_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/vault"
+
+mkdir -p /var/packages/vault/var
+cat <<EOF > "/var/packages/vault/var/env.sh"
+export VAULT_SHARE_DIR="$VAULT_SHARE_DIR"
+EOF
+
+mkdir -p "${VAULT_SHARE_DIR}/etc/vault.d"
+if [ ! -f "${VAULT_SHARE_DIR}/etc/vault.d/vault.hcl" ]; then
+  mkdir -p "${VAULT_SHARE_DIR}/var/lib/vault"
+  cat <<EOF > "${VAULT_SHARE_DIR}/etc/vault.d/vault.hcl"
+ui            = true
+disable_mlock = true
+
+storage "file" {
+  path    = "$(VAULT_SHARE_DIR)/data"
+}
+
+listener "tcp" {
+  address       = "0.0.0.0:8200"
+  tls_cert_file = "/path/to/full-chain.pem"
+  tls_key_file  = "/path/to/private-key.pem"
+  tls_disable_client_certs = true
+}
+EOF
+fi;
+
+exit 0

@@ -1,0 +1,31 @@
+#!/bin/bash
+case "$1" in
+    start)
+        if [ "${EUID}" -eq 0 ]; then
+            sudo -u vault synosystemctl start pkguser-vault
+        else
+            synosystemctl start pkguser-vault
+        fi
+        ;;
+    stop)
+        if [ "${EUID}" -eq 0 ]; then
+            sudo -u vault synosystemctl stop pkguser-vault
+        else
+            synosystemctl stop pkguser-vault
+        fi
+        ;;
+    status)
+        if [ "${EUID}" -eq 0 ]; then
+            sudo -u vault synosystemctl get-active-status pkguser-vault
+        else
+            synosystemctl get-active-status pkguser-vault
+        fi
+        ;;
+    log)
+        echo ""
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status}" >&2
+        exit 1
+        ;;
+esac
