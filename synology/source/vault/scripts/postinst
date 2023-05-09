@@ -16,7 +16,7 @@ ui            = true
 disable_mlock = true
 
 storage "file" {
-  path    = "$(VAULT_SHARE_DIR)/data"
+  path    = "${VAULT_SHARE_DIR}/data"
 }
 
 listener "tcp" {
