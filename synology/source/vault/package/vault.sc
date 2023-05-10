@@ -1,5 +1,5 @@
-[vault_ui_port]
-title="Vault UI"
-desc="Vault UI"
+[vault]
+title="Vault"
+desc="Vault"
 port_forward="yes"
-dst.ports="8200/tcp"
+dst.ports="8200/tcp 8201/tcp"
