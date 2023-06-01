@@ -1,0 +1,32 @@
+
+name: Build and Release a Synology Package for Hashicorp vault 
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  run-playbook:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies Including Ansible
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          
+      - name: run playbook
+        run: |
+          ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars 'hashicorp_app_version=1.13.2 hashicorp_app_os=linux hashicorp_app_arch=amd64 syno_package_name=vault syno_package_display_name="" syno_package_description="SaaS for managing secrets, encryption and privileged access management by HashiCorp Vault." gh_access_token=${{secrets.PERSONAL_ACCESS_TOKEN_ATVGITOPS}}' ansible/hashicorp_build_and_release_synopkg.yml
