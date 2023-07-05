@@ -29,4 +29,4 @@ jobs:
           
       - name: run playbook
         run: |
-          ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars 'hashicorp_app_version=1.13.2 hashicorp_app_os=linux hashicorp_app_arch=amd64 syno_package_name=vault syno_package_display_name="" syno_package_description="SaaS for managing secrets, encryption and privileged access management by HashiCorp Vault." gh_access_token=${{secrets.PERSONAL_ACCESS_TOKEN_ATVGITOPS}}' ansible/hashicorp_build_and_release_synopkg.yml
+          ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars 'hashicorp_app_version=1.14.0 hashicorp_app_os=linux hashicorp_app_arch=amd64 syno_package_name=vault syno_package_display_name="" syno_package_description="SaaS for managing secrets, encryption and privileged access management by HashiCorp Vault." gh_access_token=${{secrets.PERSONAL_ACCESS_TOKEN_ATVGITOPS}}' ansible/hashicorp_build_and_release_synopkg.yml
